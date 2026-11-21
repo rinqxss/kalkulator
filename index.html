@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор расчёта стоимости</title>
+    <title>Калькулятор оценок</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="calculator">
-        <h1>Калькулятор расчёта стоимости</h1>
-        <input type="text" id="initialCost" placeholder="Начальная стоимость">
-        <input type="text" id="coefficient" placeholder="Коэффициент">
-        <button onclick="calculateCost()">Рассчитать</button>
-        <div id="result">Результат: 0</div>
+        <h1>Калькулятор оценок</h1>
+        <input type="text" id="numOfGrades" placeholder="Количество оценок">
+        <input type="text" id="grades" placeholder="Оценки (через запятую)">
+        <button onclick="calculateGrades()">Рассчитать</button>
+        <div id="result">
+            <div>Средний балл: <span id="average">0</span></div>
+            <div>Итоговая оценка: <span id="grade">—</span></div>
+        </div>
         <div id="log"></div>
     </div>
     <script src="script.js"></script>
