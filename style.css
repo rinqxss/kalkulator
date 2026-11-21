@@ -1,4 +1,4 @@
-/* ============ Калькулятор оценок — тёмная тема с бликами ============ */
+/* ===== Калькулятор оценок — тёмная тема с переливающимися бликами ===== */
 
 * {
     box-sizing: border-box;
@@ -9,18 +9,20 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    color: #ffffff;
+    color: #fff;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     overflow-x: hidden;
 }
 
-/* ---------- Цветные блики на фоне ---------- */
+/* ---------- Переливающиеся цветные блики ---------- */
 
-/* Общие свойства световых пятен */
 body::before,
-body::after,
-.blick {
+body::after {
+    content: '';
     position: fixed;
     border-radius: 50%;
     filter: blur(90px);
@@ -31,7 +33,6 @@ body::after,
 
 /* Розово-фиолетовый блик сверху слева */
 body::before {
-    content: '';
     width: 60vw;
     height: 60vw;
     top: -25vw;
@@ -42,23 +43,12 @@ body::before {
 
 /* Голубой блик снизу справа */
 body::after {
-    content: '';
     width: 55vw;
     height: 55vw;
     bottom: -20vw;
     right: -12vw;
     background: radial-gradient(circle, #4dd0ff 0%, transparent 70%);
     animation: drift2 18s ease-in-out infinite alternate;
-}
-
-/* Зелёный блик по центру */
-.blick {
-    width: 45vw;
-    height: 45vw;
-    top: 30%;
-    left: 35%;
-    background: radial-gradient(circle, #7bffb2 0%, transparent 70%);
-    animation: drift3 22s ease-in-out infinite alternate;
 }
 
 @keyframes drift1 {
@@ -71,18 +61,14 @@ body::after {
     to   { transform: translate(-8vw, -6vw) scale(1.15); }
 }
 
-@keyframes drift3 {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-7vw, 8vw) scale(0.85); }
-}
+/* ---------- Стеклянная карточка ---------- */
 
-/* ---------- Стеклянный контейнер ---------- */
-
-.container {
+.app-card {
     position: relative;
     z-index: 1;
+    width: 100%;
     max-width: 640px;
-    margin: 30px auto;
+    margin: 30px 15px;
     padding: 30px 25px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -90,20 +76,18 @@ body::after {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
-/* Поддержка размытия фона, где доступно */
 @supports (backdrop-filter: blur(18px)) {
-    .container {
+    .app-card {
         backdrop-filter: blur(18px);
     }
 }
 
-/* ---------- Заголовок с переливом ---------- */
+/* ---------- Шапка ---------- */
 
-h1 {
+.app-header h1 {
     text-align: center;
     font-size: 28px;
-    margin: 0 0 10px;
-    color: #7bffb2; /* запасной цвет, если градиент не поддерживается */
+    margin: 0 0 8px;
     background: linear-gradient(90deg, #ff6ec4, #ffd86e, #7bffb2, #4dd0ff, #ff6ec4);
     background-size: 300% 100%;
     -webkit-background-clip: text;
@@ -112,29 +96,35 @@ h1 {
     animation: shimmer 6s linear infinite;
 }
 
+.app-header h1,
+.app-header .code-404 {
+    /* запасной цвет виден, если градиент не поддерживается */
+}
+
+.app-header p {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 20px;
+    font-size: 14px;
+}
+
+.app-header h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
 @keyframes shimmer {
     from { background-position: 0% 50%; }
     to   { background-position: 300% 50%; }
 }
 
-p {
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    margin: 0 0 18px;
-}
+/* ---------- Форма: пары полей в строку ---------- */
 
-h2 {
-    font-size: 18px;
-    color: #fff;
-    margin: 0;
-}
-
-/* ---------- Сетка полей ---------- */
-
-.fields {
+.calc-form .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
+    margin-bottom: 12px;
 }
 
 .field label {
@@ -168,12 +158,11 @@ h2 {
 
 /* ---------- Кнопки ---------- */
 
-button,
-.btn {
+.btn-primary {
     display: block;
     width: 100%;
     padding: 15px;
-    margin-top: 18px;
+    margin-top: 10px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -185,57 +174,64 @@ button,
     background: linear-gradient(90deg, #7b2ff7, #f726d4, #4dd0ff, #7b2ff7);
     background-size: 300% 100%;
     box-shadow: 0 8px 24px rgba(247, 38, 212, 0.35);
-    transition: transform 0.2s, box-shadow 0.25s, background-position 0.4s;
+    transition: transform 0.2s, box-shadow 0.25s;
     animation: shimmer 8s linear infinite;
 }
 
-button:hover,
-.btn:hover {
+.btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 32px rgba(247, 38, 212, 0.55);
 }
 
-/* Красная кнопка очистки журнала */
-#clearLog {
-    width: auto;
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-clear {
     padding: 8px 16px;
-    margin: 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
     font-size: 13px;
+    font-weight: 600;
+    color: #fff;
     background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff416c);
     background-size: 200% 100%;
     box-shadow: 0 6px 18px rgba(255, 65, 108, 0.35);
+    transition: transform 0.2s, box-shadow 0.25s;
 }
 
-/* ---------- Результат и ошибка ---------- */
+.btn-clear:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(255, 65, 108, 0.55);
+}
 
-#result {
-    margin-top: 22px;
-    padding: 18px;
+/* ---------- Блок обратной связи (результат / ошибка) ---------- */
+
+.feedback {
+    margin-top: 18px;
+    padding: 16px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-#finalScore {
+.feedback.ok {
     color: #7bffb2;
     text-shadow: 0 0 12px rgba(123, 255, 178, 0.6);
 }
 
-#error {
+.feedback.bad {
     color: #ff8fa3;
-    font-weight: bold;
-    text-align: center;
-    margin: 12px 0 0;
-    min-height: 1.2em;
     text-shadow: 0 0 10px rgba(255, 80, 120, 0.5);
 }
 
 /* ---------- Журнал ---------- */
 
-#log {
+.log-section {
     margin-top: 22px;
     padding: 18px;
     border-radius: 14px;
@@ -247,18 +243,20 @@ button:hover,
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     margin-bottom: 12px;
 }
 
-#logList {
+.log-list {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     max-height: 300px;
     overflow-y: auto;
+    counter-reset: entry;
 }
 
-#logList li {
+.log-list li {
     padding: 10px 12px;
     margin-bottom: 8px;
     border-radius: 8px;
@@ -269,12 +267,11 @@ button:hover,
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#logList li:hover {
+.log-list li:hover {
     background: linear-gradient(90deg, rgba(123, 47, 247, 0.3), rgba(77, 208, 255, 0.3));
 }
 
-/* Пустой журнал */
-#logList .empty {
+.log-list li.empty {
     text-align: center;
     color: rgba(255, 255, 255, 0.4);
     background: none;
@@ -290,30 +287,38 @@ button:hover,
 }
 
 .code-404 {
-    font-size: 90px;
+    font-size: 80px;
     font-weight: bold;
     color: #ff6ec4;
     text-shadow: 0 0 30px rgba(255, 110, 196, 0.7);
+    line-height: 1;
     margin-bottom: 10px;
+}
+
+.error-page .btn-primary {
+    display: inline-block;
+    width: auto;
+    padding: 13px 30px;
+    margin-top: 20px;
 }
 
 /* ---------- Адаптив для телефона ---------- */
 
 @media screen and (max-width: 480px) {
-    .container {
+    .app-card {
         margin: 15px 10px;
         padding: 22px 16px;
     }
 
-    .fields {
+    .calc-form .row {
         grid-template-columns: 1fr;
     }
 
-    h1 {
+    .app-header h1 {
         font-size: 22px;
     }
 
     .code-404 {
-        font-size: 64px;
+        font-size: 60px;
     }
 }
