@@ -356,3 +356,36 @@ body::after {
         width: 100%;
     }
 }
+/* ---------- Цвета итоговой оценки ---------- */
+
+/* отлично — зелёный */
+.feedback.ok {
+    color: #7bffb2;
+    text-shadow: 0 0 12px rgba(123, 255, 178, 0.6);
+    background: rgba(123, 255, 178, 0.12);
+    border-color: rgba(123, 255, 178, 0.45);
+}
+
+/* хорошо — жёлтый */
+.feedback.warn {
+    color: #ffe66e;
+    text-shadow: 0 0 12px rgba(255, 230, 110, 0.6);
+    background: rgba(255, 230, 110, 0.12);
+    border-color: rgba(255, 230, 110, 0.45);
+}
+
+/* удовлетворительно — синий */
+.feedback.info {
+    color: #6ec2ff;
+    text-shadow: 0 0 12px rgba(110, 194, 255, 0.6);
+    background: rgba(110, 194, 255, 0.12);
+    border-color: rgba(110, 194, 255, 0.45);
+}
+
+/* отчислен и все ошибки — красный */
+.feedback.bad {
+    color: #ff8fa3;
+    text-shadow: 0 0 10px rgba(255, 80, 120, 0.5);
+    background: rgba(255, 110, 140, 0.12);
+    border-color: rgba(255, 110, 140, 0.45);
+}
