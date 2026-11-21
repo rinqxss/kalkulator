@@ -1,19 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const calcBtn = document.getElementById('calcBtn');
-    const clearBtn = document.getElementById('clearLog');
-    const resultEl = document.getElementById('finalScore');
-    const errorEl = document.getElementById('error');
-    const logList = document.getElementById('logList');
-    const FIELD_COUNT = 10;
-    const STORAGE_KEY = 'gradeLog';
+document.addEventListener('DOMContentLoaded', function () {
+    var calcBtn = document.getElementById('calcBtn');
+    var clearBtn = document.getElementById('clearLog');
+    var resultEl = document.getElementById('finalScore');
+    var errorEl = document.getElementById('error');
+    var logList = document.getElementById('logList');
+    var FIELD_COUNT = 10;
+    var STORAGE_KEY = 'gradeLog';
 
     // Фразы ошибок (требование №2)
-    const MSG_EMPTY   = 'Ошибка: заполните хотя бы одно поле — все поля пустые.';
-    const MSG_LETTERS = 'Ошибка: введены буквы или символы — разрешены только числа.';
-    const MSG_ZERO    = 'Ошибка: ноль не может быть оценкой.';
-    const MSG_NEG     = 'Ошибка: отрицательные числа недопустимы.';
+    var MSG_EMPTY   = 'Ошибка: заполните хотя бы одно поле — все поля пустые.';
+    var MSG_LETTERS = 'Ошибка: введены буквы или символы — разрешены только числа.';
+    var MSG_ZERO    = 'Ошибка: ноль не может быть оценкой.';
+    var MSG_NEG     = 'Ошибка: отрицательные числа недопустимы.';
 
-    // Читаем журнал из localStorage
     function getEntries() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -22,21 +21,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Сохраняем журнал в localStorage
     function saveEntries(entries) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
     }
 
-    // Отрисовка одной записи журнала (новые добавляются вниз)
+    // Записи добавляются вниз списка, старые не затираются
     function addLogEntry(entry) {
-        const li = document.createElement('li');
+        var emptyNote = logList.querySelector('.empty');
+        if (emptyNote) {
+            emptyNote.remove();
+        }
+        var li = document.createElement('li');
         li.textContent = entry.time + ' | Оценки: ' + entry.input + ' | Итог: ' + entry.result;
         logList.appendChild(li);
     }
 
-    // Загружаем журнал при открытии страницы (история сохраняется после F5)
     function loadLog() {
-        getEntries().forEach(addLogEntry);
+        var entries = getEntries();
+        if (entries.length === 0) {
+            var li = document.createElement('li');
+            li.className = 'empty';
+            li.textContent = 'Пока нет записей';
+            logList.appendChild(li);
+        } else {
+            entries.forEach(addLogEntry);
+        }
     }
 
     function showError(message) {
@@ -53,68 +62,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculate() {
-        const raw = [];
-        for (let i = 1; i <= FIELD_COUNT; i++) {
-            raw.push(document.getElementById('score' + i).value.trim());
+        var raw = [];
+        for (var i = 1; i <= FIELD_COUNT; i++) {
+            var el = document.getElementById('score' + i);
+            raw.push(el ? el.value.trim() : '');
         }
 
-        // 1. Пустые поля: если не заполнено НИ ОДНОГО — ошибка №1.
-        // Отдельные пустые поля допустимы — они просто не участвуют в расчёте.
-        const filled = raw.filter(v => v !== '');
+        // 1. Пустые поля: если не заполнено ни одно — ошибка №1.
+        // Отдельные пустые поля допустимы, они не участвуют в расчёте.
+        var filled = raw.filter(function (v) { return v !== ''; });
         if (filled.length === 0) {
             showError(MSG_EMPTY);
             return;
         }
 
-        // 2. Буквы или символы (не число) — проверяем только заполненные поля
-        if (filled.some(v => isNaN(Number(v)))) {
-            showError(MSG_LETTERS);
-            return;
+        // 2. Буквы или символы (не число)
+        for (var j = 0; j < filled.length; j++) {
+            if (isNaN(Number(filled[j]))) {
+                showError(MSG_LETTERS);
+                return;
+            }
         }
 
-        const nums = filled.map(v => Number(v));
+        var nums = filled.map(Number);
 
         // 3. Ровно ноль
-        if (nums.some(n => n === 0)) {
-            showError(MSG_ZERO);
-            return;
+        for (var k = 0; k < nums.length; k++) {
+            if (nums[k] === 0) {
+                showError(MSG_ZERO);
+                return;
+            }
         }
 
         // 4. Отрицательное число
-        if (nums.some(n => n < 0)) {
-            showError(MSG_NEG);
-            return;
+        for (var m = 0; m < nums.length; m++) {
+            if (nums[m] < 0) {
+                showError(MSG_NEG);
+                return;
+            }
         }
 
-        // Расчёт среднего балла только по заполненным полям
-        const sum = nums.reduce((acc, n) => acc + n, 0);
-        const avg = sum / nums.length;
-        const avgRounded = avg.toFixed(2);
-        const verdict = gradeName(avg);
+        // Расчёт среднего балла по заполненным полям
+        var sum = 0;
+        for (var s = 0; s < nums.length; s++) {
+            sum += nums[s];
+        }
+        var avg = sum / nums.length;
+        var avgRounded = avg.toFixed(2);
+        var verdict = gradeName(avg);
 
         resultEl.textContent = avgRounded + ' — ' + verdict;
         errorEl.textContent = '';
 
         // Запись в журнал: время, введённые данные, итог
-        const now = new Date();
-        const entry = {
+        var now = new Date();
+        var entry = {
             time: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU'),
             input: nums.join(', '),
             result: avgRounded + ' (' + verdict + ')'
         };
 
-        const entries = getEntries();
-        entries.push(entry);   // каждый новый запрос добавляется в конец
+        var entries = getEntries();
+        entries.push(entry);
         saveEntries(entries);
-        addLogEntry(entry);    // старые записи не затираются
+        addLogEntry(entry);
     }
 
     function clearLog() {
         localStorage.removeItem(STORAGE_KEY);
         logList.innerHTML = '';
+        var li = document.createElement('li');
+        li.className = 'empty';
+        li.textContent = 'Пока нет записей';
+        logList.appendChild(li);
     }
 
-    calcBtn.addEventListener('click', calculate);
-    clearBtn.addEventListener('click', clearLog);
+    if (calcBtn) calcBtn.addEventListener('click', calculate);
+    if (clearBtn) clearBtn.addEventListener('click', clearLog);
     loadLog();
 });
