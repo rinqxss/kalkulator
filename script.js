@@ -6,13 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var FIELD_COUNT = 10;
     var STORAGE_KEY = 'gradeLog';
 
-    // Фразы ошибок (требование №2)
+    // Фразы ошибок
     var MSG_EMPTY   = 'Ошибка: заполните хотя бы одно поле — все поля пустые.';
     var MSG_LETTERS = 'Ошибка: недопустимое значение — вводите только числа.';
     var MSG_ZERO    = 'Ошибка: такой оценки нет — минимальная оценка 1.';
     var MSG_NEG     = 'Ошибка: минусовой оценки не существует.';
-
-    // ---------- Работа с журналом в localStorage ----------
+    var MSG_TOO_HIGH = 'Ошибка: оценка не может быть больше 5.'; // новая ошибка
 
     function getEntries() {
         try {
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
     }
 
-    // Записи добавляются вниз списка, старые не затираются
     function addLogEntry(entry) {
         var emptyNote = logList.querySelector('.empty');
         if (emptyNote) emptyNote.remove();
@@ -57,18 +55,12 @@ document.addEventListener('DOMContentLoaded', function () {
         logList.appendChild(li);
     }
 
-    // ---------- Вывод сообщений ----------
-
-    // Вывод сообщения с цветом: класс задаёт окраску блока
     function showFeedback(message, type) {
         feedbackBox.hidden = false;
         feedbackBox.className = 'feedback ' + type;
         feedbackBox.textContent = message;
     }
 
-    // Итог по среднему баллу: слово + цветовой класс
-    // отлично — зелёный, хорошо — жёлтый,
-    // удовлетворительно — синий, отчислен — красный
     function gradeInfo(avg) {
         if (avg >= 4.5) return { text: 'отлично',           type: 'ok' };
         if (avg >= 3.5) return { text: 'хорошо',            type: 'warn' };
@@ -76,10 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { text: 'отчислен', type: 'bad' };
     }
 
-    // ---------- Очистка полей при обновлении страницы ----------
-
-    // При каждом открытии/обновлении страницы очищаем все поля,
-    // чтобы браузер не восстанавливал старые значения после F5
     function clearFields() {
         for (var i = 1; i <= FIELD_COUNT; i++) {
             var el = document.getElementById('score' + i);
@@ -90,8 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ---------- Расчёт ----------
-
     function calculate(event) {
         event.preventDefault();
 
@@ -101,15 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
             raw.push(el ? el.value.trim() : '');
         }
 
-        // 1. Пустые поля: если не заполнено ни одно — ошибка №1.
-        // Отдельные пустые поля допустимы, они не участвуют в расчёте.
+        // 1. Пустые поля: если не заполнено ни одно — ошибка
         var filled = raw.filter(function (v) { return v !== ''; });
         if (filled.length === 0) {
             showFeedback(MSG_EMPTY, 'bad');
             return;
         }
 
-        // 2. Буквы или символы (не число)
+        // 2. Буквы или мусор (не число)
         for (var j = 0; j < filled.length; j++) {
             if (isNaN(Number(filled[j]))) {
                 showFeedback(MSG_LETTERS, 'bad');
@@ -135,6 +120,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // 5. Оценка больше 5
+        for (var h = 0; h < nums.length; h++) {
+            if (nums[h] > 5) {
+                showFeedback(MSG_TOO_HIGH, 'bad');
+                return;
+            }
+        }
+
         // Расчёт среднего балла по заполненным полям
         var sum = 0;
         for (var s = 0; s < nums.length; s++) {
@@ -146,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         showFeedback('Средний балл: ' + avgRounded + ' — ' + info.text, info.type);
 
-        // Запись в журнал: время, введённые данные, итог
+        // Запись в журнал
         var now = new Date();
         var entry = {
             time: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU'),
@@ -160,11 +153,9 @@ document.addEventListener('DOMContentLoaded', function () {
         addLogEntry(entry);
     }
 
-    // ---------- Подключение событий и запуск ----------
-
     if (calcForm) calcForm.addEventListener('submit', calculate);
     if (clearBtn) clearBtn.addEventListener('click', clearLog);
 
-    clearFields(); // очищаем поля при каждом открытии/обновлении страницы
-    loadLog();     // журнал при этом сохраняется в localStorage
+    clearFields();
+    loadLog();
 });
