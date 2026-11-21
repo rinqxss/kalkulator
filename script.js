@@ -46,18 +46,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Вывод сообщения с цветом: класс задаёт окраску блока
     function showFeedback(message, type) {
         feedbackBox.hidden = false;
         feedbackBox.className = 'feedback ' + type;
         feedbackBox.textContent = message;
     }
 
-    // Итоговая оценка по среднему баллу
-    function gradeName(avg) {
-        if (avg >= 4.5) return 'отлично';
-        if (avg >= 3.5) return 'хорошо';
-        if (avg >= 2.5) return 'удовлетворительно';
-        return 'неудовлетворительно';
+    // Итог по среднему баллу: слово + цветовой класс
+    // отлично — зелёный, хорошо — жёлтый,
+    // удовлетворительно — синий, отчислен — красный
+    function gradeInfo(avg) {
+        if (avg >= 4.5) return { text: 'отлично',            type: 'ok' };
+        if (avg >= 3.5) return { text: 'хорошо',             type: 'warn' };
+        if (avg >= 2.5) return { text: 'удовлетворительно',  type: 'info' };
+        return { text: 'отчислен', type: 'bad' };
     }
 
     function calculate(event) {
@@ -110,16 +113,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         var avg = sum / nums.length;
         var avgRounded = avg.toFixed(2);
-        var verdict = gradeName(avg);
+        var info = gradeInfo(avg);
 
-        showFeedback('Средний балл: ' + avgRounded + ' — ' + verdict, 'ok');
+        showFeedback('Средний балл: ' + avgRounded + ' — ' + info.text, info.type);
 
         // Запись в журнал: время, введённые данные, итог
         var now = new Date();
         var entry = {
             time: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU'),
             input: nums.join(', '),
-            result: avgRounded + ' (' + verdict + ')'
+            result: avgRounded + ' (' + info.text + ')'
         };
 
         var entries = getEntries();
