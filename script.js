@@ -1,36 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const initialCost = document.getElementById('initialCost');
-    const coefficient = document.getElementById('coefficient');
-    const result = document.getElementById('result');
+    const numOfGrades = document.getElementById('numOfGrades');
+    const gradesInput = document.getElementById('grades');
+    const average = document.getElementById('average');
+    const grade = document.getElementById('grade');
     const log = document.getElementById('log');
 
-    function calculateCost() {
-        let cost = 0;
-        let error = '';
+    function calculateGrades() {
+        let grades = gradesInput.value.trim().split(',');
+        let sum = 0;
+        let valid = true;
 
-        if (initialCost.value === '') {
-            error = '[Вы ничего не ввели №1]';
-        } else if (isNaN(initialCost.value) || initialCost.value < 0) {
-            error = '[Вы ввели недопустимое значение №2]';
-        } else if (initialCost.value === '0') {
-            error = '[Вы ввели 0 №3]';
-        } else {
-            cost = parseFloat(initialCost.value) * parseFloat(coefficient.value);
-        }
-
-        if (error) {
-            result.textContent = error;
+        // Проверка на пустое поле
+        if (grades.length === 0) {
+            average.textContent = '[Вы ничего не ввели №1]';
+            grade.textContent = '—';
             return;
         }
 
-        result.textContent = cost;
+        // Проверка на недопустимые символы
+        for (let i = 0; i < grades.length; i++) {
+            if (isNaN(grades[i])) {
+                valid = false;
+                average.textContent = '[Вы ввели недопустимое значение №2]';
+                grade.textContent = '—';
+                break;
+            }
+        }
 
-        // Добавляем запись в журнал
-        const entry = `Время: ${new Date().toLocaleString()}, Начальная стоимость: ${initialCost.value}, Коэффициент: ${coefficient.value}, Результат: ${cost}\n`;
-        log.innerHTML += entry;
-        localStorage.setItem('log', log.innerHTML);
-    }
-
-    // Очищаем журнал
-    function clearLog() {
-        log.
+        // Проверка на нули и отрицательные числа
+        for (let i = 0; i < grades.length; i++) {
+            if (grades[i] === '0'
