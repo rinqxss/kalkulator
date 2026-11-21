@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var calcBtn = document.getElementById('calcBtn');
-    var clearBtn = document.getElementById('clearLog');
-    var resultEl = document.getElementById('finalScore');
-    var errorEl = document.getElementById('error');
+    var calcForm = document.getElementById('calcForm');
+    var feedbackBox = document.getElementById('feedbackBox');
+    var clearBtn = document.getElementById('clearLogBtn');
     var logList = document.getElementById('logList');
     var FIELD_COUNT = 10;
     var STORAGE_KEY = 'gradeLog';
@@ -28,9 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Записи добавляются вниз списка, старые не затираются
     function addLogEntry(entry) {
         var emptyNote = logList.querySelector('.empty');
-        if (emptyNote) {
-            emptyNote.remove();
-        }
+        if (emptyNote) emptyNote.remove();
+
         var li = document.createElement('li');
         li.textContent = entry.time + ' | Оценки: ' + entry.input + ' | Итог: ' + entry.result;
         logList.appendChild(li);
@@ -48,9 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function showError(message) {
-        errorEl.textContent = message;
-        resultEl.textContent = '—';
+    function showFeedback(message, type) {
+        feedbackBox.hidden = false;
+        feedbackBox.className = 'feedback ' + type;
+        feedbackBox.textContent = message;
     }
 
     // Итоговая оценка по среднему баллу
@@ -61,7 +60,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return 'неудовлетворительно';
     }
 
-    function calculate() {
+    function calculate(event) {
+        event.preventDefault();
+
         var raw = [];
         for (var i = 1; i <= FIELD_COUNT; i++) {
             var el = document.getElementById('score' + i);
@@ -72,14 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Отдельные пустые поля допустимы, они не участвуют в расчёте.
         var filled = raw.filter(function (v) { return v !== ''; });
         if (filled.length === 0) {
-            showError(MSG_EMPTY);
+            showFeedback(MSG_EMPTY, 'bad');
             return;
         }
 
         // 2. Буквы или символы (не число)
         for (var j = 0; j < filled.length; j++) {
             if (isNaN(Number(filled[j]))) {
-                showError(MSG_LETTERS);
+                showFeedback(MSG_LETTERS, 'bad');
                 return;
             }
         }
@@ -89,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 3. Ровно ноль
         for (var k = 0; k < nums.length; k++) {
             if (nums[k] === 0) {
-                showError(MSG_ZERO);
+                showFeedback(MSG_ZERO, 'bad');
                 return;
             }
         }
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 4. Отрицательное число
         for (var m = 0; m < nums.length; m++) {
             if (nums[m] < 0) {
-                showError(MSG_NEG);
+                showFeedback(MSG_NEG, 'bad');
                 return;
             }
         }
@@ -111,8 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var avgRounded = avg.toFixed(2);
         var verdict = gradeName(avg);
 
-        resultEl.textContent = avgRounded + ' — ' + verdict;
-        errorEl.textContent = '';
+        showFeedback('Средний балл: ' + avgRounded + ' — ' + verdict, 'ok');
 
         // Запись в журнал: время, введённые данные, итог
         var now = new Date();
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
         logList.appendChild(li);
     }
 
-    if (calcBtn) calcBtn.addEventListener('click', calculate);
+    if (calcForm) calcForm.addEventListener('submit', calculate);
     if (clearBtn) clearBtn.addEventListener('click', clearLog);
     loadLog();
 });
