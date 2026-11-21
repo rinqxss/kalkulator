@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var MSG_ZERO    = 'Ошибка: такой оценки нет — минимальная оценка 1.';
     var MSG_NEG     = 'Ошибка: минусовой оценки не существует.';
 
+    // ---------- Работа с журналом в localStorage ----------
+
     function getEntries() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -46,6 +48,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function clearLog() {
+        localStorage.removeItem(STORAGE_KEY);
+        logList.innerHTML = '';
+        var li = document.createElement('li');
+        li.className = 'empty';
+        li.textContent = 'Пока нет записей';
+        logList.appendChild(li);
+    }
+
+    // ---------- Вывод сообщений ----------
+
     // Вывод сообщения с цветом: класс задаёт окраску блока
     function showFeedback(message, type) {
         feedbackBox.hidden = false;
@@ -57,11 +70,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // отлично — зелёный, хорошо — жёлтый,
     // удовлетворительно — синий, отчислен — красный
     function gradeInfo(avg) {
-        if (avg >= 4.5) return { text: 'отлично',            type: 'ok' };
-        if (avg >= 3.5) return { text: 'хорошо',             type: 'warn' };
-        if (avg >= 2.5) return { text: 'удовлетворительно',  type: 'info' };
+        if (avg >= 4.5) return { text: 'отлично',           type: 'ok' };
+        if (avg >= 3.5) return { text: 'хорошо',            type: 'warn' };
+        if (avg >= 2.5) return { text: 'удовлетворительно', type: 'info' };
         return { text: 'отчислен', type: 'bad' };
     }
+
+    // ---------- Очистка полей при обновлении страницы ----------
+
+    // При каждом открытии/обновлении страницы очищаем все поля,
+    // чтобы браузер не восстанавливал старые значения после F5
+    function clearFields() {
+        for (var i = 1; i <= FIELD_COUNT; i++) {
+            var el = document.getElementById('score' + i);
+            if (el) {
+                el.value = '';
+                el.autocomplete = 'off';
+            }
+        }
+    }
+
+    // ---------- Расчёт ----------
 
     function calculate(event) {
         event.preventDefault();
@@ -131,16 +160,11 @@ document.addEventListener('DOMContentLoaded', function () {
         addLogEntry(entry);
     }
 
-    function clearLog() {
-        localStorage.removeItem(STORAGE_KEY);
-        logList.innerHTML = '';
-        var li = document.createElement('li');
-        li.className = 'empty';
-        li.textContent = 'Пока нет записей';
-        logList.appendChild(li);
-    }
+    // ---------- Подключение событий и запуск ----------
 
     if (calcForm) calcForm.addEventListener('submit', calculate);
     if (clearBtn) clearBtn.addEventListener('click', clearLog);
-    loadLog();
+
+    clearFields(); // очищаем поля при каждом открытии/обновлении страницы
+    loadLog();     // журнал при этом сохраняется в localStorage
 });
