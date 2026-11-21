@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор оценок</title>
+    <title>Калькулятор расчёта оценок</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="calculator">
-        <h1>Калькулятор оценок</h1>
-        <input type="text" id="numOfGrades" placeholder="Количество оценок">
-        <input type="text" id="grades" placeholder="Оценки (через запятую)">
-        <button onclick="calculateGrades()">Рассчитать</button>
-        <div id="result">
-            <div>Средний балл: <span id="average">0</span></div>
-            <div>Итоговая оценка: <span id="grade">—</span></div>
-        </div>
-        <div id="log"></div>
+    <h1>Калькулятор расчёта оценок</h1>
+    <form id="calcForm">
+        <label for="score1">Оценка 1:</label>
+        <input type="text" id="score1" name="score1" placeholder="Введите оценку"><br>
+        <label for="score2">Оценка 2:</label>
+        <input type="text" id="score2" name="score2" placeholder="Введите оценку"><br>
+        <label for="score3">Оценка 3:</label>
+        <input type="text" id="score3" name="score3" placeholder="Введите оценку"><br>
+        <button type="button" onclick="calculate()">Рассчитать</button>
+    </form>
+    <div id="result">
+        <p>Результат: <span id="finalScore">0</span></p>
+    </div>
+    <div id="log">
+        <!-- Журнал запросов будет добавлен через JS -->
     </div>
     <script src="script.js"></script>
 </body>
