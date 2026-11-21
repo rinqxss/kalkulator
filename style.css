@@ -1,111 +1,118 @@
-/* ===== Калькулятор расчёта оценок — оформление с переливающимися бликами ===== */
+/* ============ Калькулятор оценок — тёмная тема с бликами ============ */
 
 * {
     box-sizing: border-box;
 }
-
-/* ---------- Фон с анимированными цветными бликами ---------- */
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    color: #2c2e3a;
+    color: #ffffff;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     background-attachment: fixed;
-    position: relative;
     overflow-x: hidden;
 }
 
-/* Световые пятна-блики */
+/* ---------- Цветные блики на фоне ---------- */
+
+/* Общие свойства световых пятен */
 body::before,
 body::after,
 .blick {
-    content: '';
     position: fixed;
     border-radius: 50%;
     filter: blur(90px);
-    opacity: 0.55;
+    opacity: 0.5;
     pointer-events: none;
     z-index: 0;
 }
 
-/* Блик 1 — фиолетово-розовый */
+/* Розово-фиолетовый блик сверху слева */
 body::before {
-    width: 55vw;
-    height: 55vw;
-    top: -20vw;
+    content: '';
+    width: 60vw;
+    height: 60vw;
+    top: -25vw;
     left: -15vw;
     background: radial-gradient(circle, #ff6ec4 0%, transparent 70%);
     animation: drift1 14s ease-in-out infinite alternate;
 }
 
-/* Блик 2 — голубой */
+/* Голубой блик снизу справа */
 body::after {
-    width: 50vw;
-    height: 50vw;
-    bottom: -18vw;
+    content: '';
+    width: 55vw;
+    height: 55vw;
+    bottom: -20vw;
     right: -12vw;
     background: radial-gradient(circle, #4dd0ff 0%, transparent 70%);
     animation: drift2 18s ease-in-out infinite alternate;
 }
 
-/* Блик 3 — зелёно-жёлтый (добавлен в HTML не нужен — создан скриптом) */
+/* Зелёный блик по центру */
 .blick {
-    width: 40vw;
-    height: 40vw;
-    top: 35%;
-    left: 40%;
+    width: 45vw;
+    height: 45vw;
+    top: 30%;
+    left: 35%;
     background: radial-gradient(circle, #7bffb2 0%, transparent 70%);
     animation: drift3 22s ease-in-out infinite alternate;
 }
 
 @keyframes drift1 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(8vw, 6vw) scale(1.2); }
+    to   { transform: translate(9vw, 7vw) scale(1.25); }
 }
 
 @keyframes drift2 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-7vw, -5vw) scale(1.15); }
+    to   { transform: translate(-8vw, -6vw) scale(1.15); }
 }
 
 @keyframes drift3 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-6vw, 7vw) scale(0.85); }
+    to   { transform: translate(-7vw, 8vw) scale(0.85); }
 }
 
-/* ---------- Стеклянный контейнер поверх бликов ---------- */
+/* ---------- Стеклянный контейнер ---------- */
 
 .container {
     position: relative;
     z-index: 1;
-    max-width: 620px;
+    max-width: 640px;
     margin: 30px auto;
     padding: 30px 25px;
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
-/* Переливающийся градиентный заголовок */
+/* Поддержка размытия фона, где доступно */
+@supports (backdrop-filter: blur(18px)) {
+    .container {
+        backdrop-filter: blur(18px);
+    }
+}
+
+/* ---------- Заголовок с переливом ---------- */
+
 h1 {
     text-align: center;
     font-size: 28px;
     margin: 0 0 10px;
+    color: #7bffb2; /* запасной цвет, если градиент не поддерживается */
     background: linear-gradient(90deg, #ff6ec4, #ffd86e, #7bffb2, #4dd0ff, #ff6ec4);
     background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmerText 6s linear infinite;
+    animation: shimmer 6s linear infinite;
 }
 
-@keyframes shimmerText {
+@keyframes shimmer {
     from { background-position: 0% 50%; }
     to   { background-position: 300% 50%; }
 }
@@ -113,12 +120,13 @@ h1 {
 p {
     color: rgba(255, 255, 255, 0.8);
     text-align: center;
+    margin: 0 0 18px;
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 18px;
     color: #fff;
-    margin: 0 0 10px;
+    margin: 0;
 }
 
 /* ---------- Сетка полей ---------- */
@@ -134,7 +142,6 @@ h2 {
     margin-bottom: 5px;
     font-size: 13px;
     color: rgba(255, 255, 255, 0.75);
-    letter-spacing: 0.3px;
 }
 
 .field input {
@@ -145,7 +152,6 @@ h2 {
     font-size: 16px;
     color: #fff;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(6px);
     transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
@@ -157,11 +163,10 @@ h2 {
     outline: none;
     border-color: #4dd0ff;
     background: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 0 0 3px rgba(77, 208, 255, 0.25),
-                0 0 18px rgba(77, 208, 255, 0.35);
+    box-shadow: 0 0 0 3px rgba(77, 208, 255, 0.25);
 }
 
-/* ---------- Кнопки со свечением ---------- */
+/* ---------- Кнопки ---------- */
 
 button,
 .btn {
@@ -181,37 +186,27 @@ button,
     background-size: 300% 100%;
     box-shadow: 0 8px 24px rgba(247, 38, 212, 0.35);
     transition: transform 0.2s, box-shadow 0.25s, background-position 0.4s;
-    animation: shimmerText 8s linear infinite;
+    animation: shimmer 8s linear infinite;
 }
 
 button:hover,
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 32px rgba(247, 38, 212, 0.55);
-    background-position: 100% 50%;
-}
-
-button:active,
-.btn:active {
-    transform: translateY(0);
 }
 
 /* Красная кнопка очистки журнала */
 #clearLog {
     width: auto;
     padding: 8px 16px;
-    margin: 0 0 12px 0;
+    margin: 0;
+    font-size: 13px;
     background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff416c);
     background-size: 200% 100%;
-    font-size: 14px;
     box-shadow: 0 6px 18px rgba(255, 65, 108, 0.35);
 }
 
-#clearLog:hover {
-    box-shadow: 0 10px 24px rgba(255, 65, 108, 0.55);
-}
-
-/* ---------- Блок результата ---------- */
+/* ---------- Результат и ошибка ---------- */
 
 #result {
     margin-top: 22px;
@@ -219,15 +214,8 @@ button:active,
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-#result p {
-    margin: 0;
     font-size: 20px;
     font-weight: 600;
-    color: #fff;
     text-align: center;
 }
 
@@ -235,8 +223,6 @@ button:active,
     color: #7bffb2;
     text-shadow: 0 0 12px rgba(123, 255, 178, 0.6);
 }
-
-/* ---------- Сообщение об ошибке ---------- */
 
 #error {
     color: #ff8fa3;
@@ -255,7 +241,13 @@ button:active,
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+}
+
+.log-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
 #logList {
@@ -275,16 +267,34 @@ button:active,
     color: rgba(255, 255, 255, 0.85);
     background: linear-gradient(90deg, rgba(123, 47, 247, 0.18), rgba(77, 208, 255, 0.18));
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background 0.25s;
 }
 
 #logList li:hover {
     background: linear-gradient(90deg, rgba(123, 47, 247, 0.3), rgba(77, 208, 255, 0.3));
 }
 
-/* Ссылка на главной странице 404 */
-a {
-    color: #4dd0ff;
+/* Пустой журнал */
+#logList .empty {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border: none;
+}
+
+/* ---------- Страница 404 ---------- */
+
+.error-page {
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.code-404 {
+    font-size: 90px;
+    font-weight: bold;
+    color: #ff6ec4;
+    text-shadow: 0 0 30px rgba(255, 110, 196, 0.7);
+    margin-bottom: 10px;
 }
 
 /* ---------- Адаптив для телефона ---------- */
@@ -301,5 +311,9 @@ a {
 
     h1 {
         font-size: 22px;
+    }
+
+    .code-404 {
+        font-size: 64px;
     }
 }
