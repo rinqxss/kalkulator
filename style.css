@@ -1,47 +1,305 @@
+/* ===== Калькулятор расчёта оценок — оформление с переливающимися бликами ===== */
+
+* {
+    box-sizing: border-box;
+}
+
+/* ---------- Фон с анимированными цветными бликами ---------- */
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    min-height: 100vh;
+    color: #2c2e3a;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Световые пятна-блики */
+body::before,
+body::after,
+.blick {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Блик 1 — фиолетово-розовый */
+body::before {
+    width: 55vw;
+    height: 55vw;
+    top: -20vw;
+    left: -15vw;
+    background: radial-gradient(circle, #ff6ec4 0%, transparent 70%);
+    animation: drift1 14s ease-in-out infinite alternate;
+}
+
+/* Блик 2 — голубой */
+body::after {
+    width: 50vw;
+    height: 50vw;
+    bottom: -18vw;
+    right: -12vw;
+    background: radial-gradient(circle, #4dd0ff 0%, transparent 70%);
+    animation: drift2 18s ease-in-out infinite alternate;
+}
+
+/* Блик 3 — зелёно-жёлтый (добавлен в HTML не нужен — создан скриптом) */
+.blick {
+    width: 40vw;
+    height: 40vw;
+    top: 35%;
+    left: 40%;
+    background: radial-gradient(circle, #7bffb2 0%, transparent 70%);
+    animation: drift3 22s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(8vw, 6vw) scale(1.2); }
+}
+
+@keyframes drift2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-7vw, -5vw) scale(1.15); }
+}
+
+@keyframes drift3 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-6vw, 7vw) scale(0.85); }
+}
+
+/* ---------- Стеклянный контейнер поверх бликов ---------- */
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+    margin: 30px auto;
+    padding: 30px 25px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Переливающийся градиентный заголовок */
 h1 {
-    color: #333;
+    text-align: center;
+    font-size: 28px;
+    margin: 0 0 10px;
+    background: linear-gradient(90deg, #ff6ec4, #ffd86e, #7bffb2, #4dd0ff, #ff6ec4);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerText 6s linear infinite;
 }
 
-label {
+@keyframes shimmerText {
+    from { background-position: 0% 50%; }
+    to   { background-position: 300% 50%; }
+}
+
+p {
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+}
+
+h2 {
+    font-size: 20px;
+    color: #fff;
+    margin: 0 0 10px;
+}
+
+/* ---------- Сетка полей ---------- */
+
+.fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.field label {
     display: block;
     margin-bottom: 5px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.3px;
 }
 
-input {
+.field input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 11px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-size: 16px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
-button {
+.field input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.field input:focus {
+    outline: none;
+    border-color: #4dd0ff;
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 0 3px rgba(77, 208, 255, 0.25),
+                0 0 18px rgba(77, 208, 255, 0.35);
+}
+
+/* ---------- Кнопки со свечением ---------- */
+
+button,
+.btn {
+    display: block;
     width: 100%;
     padding: 15px;
-    background-color: #007bff;
-    color: white;
+    margin-top: 18px;
     border: none;
+    border-radius: 12px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(90deg, #7b2ff7, #f726d4, #4dd0ff, #7b2ff7);
+    background-size: 300% 100%;
+    box-shadow: 0 8px 24px rgba(247, 38, 212, 0.35);
+    transition: transform 0.2s, box-shadow 0.25s, background-position 0.4s;
+    animation: shimmerText 8s linear infinite;
 }
+
+button:hover,
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(247, 38, 212, 0.55);
+    background-position: 100% 50%;
+}
+
+button:active,
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Красная кнопка очистки журнала */
+#clearLog {
+    width: auto;
+    padding: 8px 16px;
+    margin: 0 0 12px 0;
+    background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff416c);
+    background-size: 200% 100%;
+    font-size: 14px;
+    box-shadow: 0 6px 18px rgba(255, 65, 108, 0.35);
+}
+
+#clearLog:hover {
+    box-shadow: 0 10px 24px rgba(255, 65, 108, 0.55);
+}
+
+/* ---------- Блок результата ---------- */
 
 #result {
-    margin-top: 20px;
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
+
+#result p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+#finalScore {
+    color: #7bffb2;
+    text-shadow: 0 0 12px rgba(123, 255, 178, 0.6);
+}
+
+/* ---------- Сообщение об ошибке ---------- */
+
+#error {
+    color: #ff8fa3;
+    font-weight: bold;
+    text-align: center;
+    margin: 12px 0 0;
+    min-height: 1.2em;
+    text-shadow: 0 0 10px rgba(255, 80, 120, 0.5);
+}
+
+/* ---------- Журнал ---------- */
 
 #log {
-    margin-top: 20px;
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
 }
 
-@media screen and (max-width: 768px) {
-    input, button {
-        width: 100%;
+#logList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#logList li {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    word-break: break-word;
+    color: rgba(255, 255, 255, 0.85);
+    background: linear-gradient(90deg, rgba(123, 47, 247, 0.18), rgba(77, 208, 255, 0.18));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.25s;
+}
+
+#logList li:hover {
+    background: linear-gradient(90deg, rgba(123, 47, 247, 0.3), rgba(77, 208, 255, 0.3));
+}
+
+/* Ссылка на главной странице 404 */
+a {
+    color: #4dd0ff;
+}
+
+/* ---------- Адаптив для телефона ---------- */
+
+@media screen and (max-width: 480px) {
+    .container {
+        margin: 15px 10px;
+        padding: 22px 16px;
+    }
+
+    .fields {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 22px;
     }
 }
