@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var FIELD_COUNT = 10;
     var STORAGE_KEY = 'gradeLog';
 
-    // Фразы ошибок
     var MSG_EMPTY   = 'Ошибка: заполните хотя бы одно поле — все поля пустые.';
     var MSG_LETTERS = 'Ошибка: недопустимое значение — вводите только числа.';
     var MSG_ZERO    = 'Ошибка: такой оценки нет — минимальная оценка 1.';
