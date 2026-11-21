@@ -7,21 +7,66 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Калькулятор расчёта оценок</h1>
-    <form id="calcForm">
-        <label for="score1">Оценка 1:</label>
-        <input type="text" id="score1" name="score1" placeholder="Введите оценку"><br>
-        <label for="score2">Оценка 2:</label>
-        <input type="text" id="score2" name="score2" placeholder="Введите оценку"><br>
-        <label for="score3">Оценка 3:</label>
-        <input type="text" id="score3" name="score3" placeholder="Введите оценку"><br>
-        <button type="button" onclick="calculate()">Рассчитать</button>
-    </form>
-    <div id="result">
-        <p>Результат: <span id="finalScore">0</span></p>
-    </div>
-    <div id="log">
-        <!-- Журнал запросов будет добавлен через JS -->
+    <div class="container">
+        <h1>Калькулятор расчёта оценок</h1>
+        <p>Заполните любые оценки (не обязательно все 10) и получите средний балл.</p>
+
+        <form id="calcForm">
+            <div class="fields">
+                <div class="field">
+                    <label for="score1">Оценка 1:</label>
+                    <input type="text" id="score1" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score2">Оценка 2:</label>
+                    <input type="text" id="score2" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score3">Оценка 3:</label>
+                    <input type="text" id="score3" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score4">Оценка 4:</label>
+                    <input type="text" id="score4" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score5">Оценка 5:</label>
+                    <input type="text" id="score5" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score6">Оценка 6:</label>
+                    <input type="text" id="score6" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score7">Оценка 7:</label>
+                    <input type="text" id="score7" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score8">Оценка 8:</label>
+                    <input type="text" id="score8" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score9">Оценка 9:</label>
+                    <input type="text" id="score9" placeholder="Введите оценку">
+                </div>
+                <div class="field">
+                    <label for="score10">Оценка 10:</label>
+                    <input type="text" id="score10" placeholder="Введите оценку">
+                </div>
+            </div>
+            <button type="button" id="calcBtn">Рассчитать</button>
+        </form>
+
+        <div id="result">
+            <p>Средний балл: <span id="finalScore">—</span></p>
+        </div>
+        <p id="error" class="error"></p>
+
+        <div id="log">
+            <h2>Журнал запросов</h2>
+            <button type="button" id="clearLog">Очистить журнал</button>
+            <ul id="logList"></ul>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
