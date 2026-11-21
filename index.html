@@ -1,77 +1,79 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор расчёта оценок</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор оценок — Расчёт среднего балла</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="blick blick-green"></div>
-
-    <div class="container">
-        <h1>Калькулятор расчёта оценок</h1>
-        <p>Заполните любые оценки (не обязательно все 10) и получите средний балл.</p>
-
-        <div class="fields">
-            <div class="field">
-                <label for="score1">Оценка 1</label>
-                <input type="text" id="score1" placeholder="Например, 5">
-            </div>
-            <div class="field">
-                <label for="score2">Оценка 2</label>
-                <input type="text" id="score2" placeholder="Например, 4">
-            </div>
-            <div class="field">
-                <label for="score3">Оценка 3</label>
-                <input type="text" id="score3" placeholder="Например, 3">
-            </div>
-            <div class="field">
-                <label for="score4">Оценка 4</label>
-                <input type="text" id="score4" placeholder="Например, 5">
-            </div>
-            <div class="field">
-                <label for="score5">Оценка 5</label>
-                <input type="text" id="score5" placeholder="Например, 4">
-            </div>
-            <div class="field">
-                <label for="score6">Оценка 6</label>
-                <input type="text" id="score6" placeholder="Например, 5">
-            </div>
-            <div class="field">
-                <label for="score7">Оценка 7</label>
-                <input type="text" id="score7" placeholder="Например, 3">
-            </div>
-            <div class="field">
-                <label for="score8">Оценка 8</label>
-                <input type="text" id="score8" placeholder="Например, 4">
-            </div>
-            <div class="field">
-                <label for="score9">Оценка 9</label>
-                <input type="text" id="score9" placeholder="Например, 5">
-            </div>
-            <div class="field">
-                <label for="score10">Оценка 10</label>
-                <input type="text" id="score10" placeholder="Например, 4">
-            </div>
+  <main class="app-card">
+    <header class="app-header">
+      <h1>Расчёт среднего балла</h1>
+      <p>Практическая работа · Калькулятор оценок студента</p>
+    </header>
+    <form id="calcForm" class="calc-form" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="score1">Оценка 1:</label>
+          <input type="text" id="score1" placeholder="Например: 5">
         </div>
-
-        <button type="button" id="calcBtn">Рассчитать</button>
-
-        <div id="result">
-            Средний балл: <span id="finalScore">—</span>
+        <div class="field">
+          <label for="score2">Оценка 2:</label>
+          <input type="text" id="score2" placeholder="Например: 4">
         </div>
-        <div id="error"></div>
-
-        <div id="log">
-            <div class="log-head">
-                <h2>Журнал запросов</h2>
-                <button type="button" id="clearLog">Очистить журнал</button>
-            </div>
-            <ul id="logList"></ul>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="score3">Оценка 3:</label>
+          <input type="text" id="score3" placeholder="Например: 3">
         </div>
-    </div>
-
-    <script src="script.js"></script>
+        <div class="field">
+          <label for="score4">Оценка 4:</label>
+          <input type="text" id="score4" placeholder="Например: 5">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="score5">Оценка 5:</label>
+          <input type="text" id="score5" placeholder="Например: 4">
+        </div>
+        <div class="field">
+          <label for="score6">Оценка 6:</label>
+          <input type="text" id="score6" placeholder="Например: 5">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="score7">Оценка 7:</label>
+          <input type="text" id="score7" placeholder="Например: 3">
+        </div>
+        <div class="field">
+          <label for="score8">Оценка 8:</label>
+          <input type="text" id="score8" placeholder="Например: 4">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="score9">Оценка 9:</label>
+          <input type="text" id="score9" placeholder="Например: 5">
+        </div>
+        <div class="field">
+          <label for="score10">Оценка 10:</label>
+          <input type="text" id="score10" placeholder="Например: 4">
+        </div>
+      </div>
+      <button type="submit" class="btn-primary">Рассчитать и зафиксировать в журнале</button>
+    </form>
+    <div id="feedbackBox" class="feedback" hidden></div>
+    <section class="log-section">
+      <div class="log-head">
+        <h2>Журнал запросов (сохраняется независимо)</h2>
+        <button type="button" id="clearLogBtn" class="btn-clear">Очистить</button>
+      </div>
+      <ol id="logList" class="log-list"></ol>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>
