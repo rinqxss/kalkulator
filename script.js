@@ -1,32 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const numOfGrades = document.getElementById('numOfGrades');
-    const gradesInput = document.getElementById('grades');
-    const average = document.getElementById('average');
-    const grade = document.getElementById('grade');
+    const form = document.getElementById('calcForm');
+    const result = document.getElementById('finalScore');
     const log = document.getElementById('log');
+    const clearLog = document.createElement('button');
+    clearLog.textContent = 'Очистить журнал';
+    clearLog.style.margin = '10px';
+    clearLog.addEventListener('click', () => {
+        localStorage.clear();
+        log.innerHTML = '';
+    });
+    log.appendChild(clearLog);
 
-    function calculateGrades() {
-        let grades = gradesInput.value.trim().split(',');
-        let sum = 0;
-        let valid = true;
+    function calculate() {
+        const scores = [
+            parseFloat(document.getElementById('score1').value) || 0,
+            parseFloat(document.getElementById('score2').value) || 0,
+            parseFloat(document.getElementById('score3').value) || 0
+        ];
 
-        // Проверка на пустое поле
-        if (grades.length === 0) {
-            average.textContent = '[Вы ничего не ввели №1]';
-            grade.textContent = '—';
-            return;
-        }
-
-        // Проверка на недопустимые символы
-        for (let i = 0; i < grades.length; i++) {
-            if (isNaN(grades[i])) {
-                valid = false;
-                average.textContent = '[Вы ввели недопустимое значение №2]';
-                grade.textContent = '—';
-                break;
-            }
-        }
-
-        // Проверка на нули и отрицательные числа
-        for (let i = 0; i < grades.length; i++) {
-            if (grades[i] === '0'
+        let error = '';
+        let valid =
