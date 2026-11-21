@@ -1,24 +1,27 @@
-/* ===== Калькулятор оценок — тёмная тема с переливающимися бликами ===== */
+
 
 * {
     box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
 }
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
     color: #fff;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     background-attachment: fixed;
+    /* Карточка всегда по центру окна */
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     overflow-x: hidden;
 }
-
-/* ---------- Переливающиеся цветные блики ---------- */
 
 body::before,
 body::after {
@@ -31,7 +34,7 @@ body::after {
     z-index: 0;
 }
 
-/* Розово-фиолетовый блик сверху слева */
+
 body::before {
     width: 60vw;
     height: 60vw;
@@ -41,7 +44,7 @@ body::before {
     animation: drift1 14s ease-in-out infinite alternate;
 }
 
-/* Голубой блик снизу справа */
+
 body::after {
     width: 55vw;
     height: 55vw;
@@ -61,19 +64,19 @@ body::after {
     to   { transform: translate(-8vw, -6vw) scale(1.15); }
 }
 
-/* ---------- Стеклянная карточка ---------- */
+
 
 .app-card {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 640px;
-    margin: 30px 15px;
-    padding: 30px 25px;
+    max-width: 680px;
+    margin: 24px;
+    padding: 34px 30px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    border-radius: 22px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
 }
 
 @supports (backdrop-filter: blur(18px)) {
@@ -82,12 +85,12 @@ body::after {
     }
 }
 
-/* ---------- Шапка ---------- */
 
 .app-header h1 {
     text-align: center;
     font-size: 28px;
     margin: 0 0 8px;
+    color: #7bffb2; /* запасной цвет, если градиент не поддерживается */
     background: linear-gradient(90deg, #ff6ec4, #ffd86e, #7bffb2, #4dd0ff, #ff6ec4);
     background-size: 300% 100%;
     -webkit-background-clip: text;
@@ -96,21 +99,11 @@ body::after {
     animation: shimmer 6s linear infinite;
 }
 
-.app-header h1,
-.app-header .code-404 {
-    /* запасной цвет виден, если градиент не поддерживается */
-}
-
 .app-header p {
     text-align: center;
-    color: rgba(255, 255, 255, 0.75);
-    margin: 0 0 20px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 24px;
     font-size: 14px;
-}
-
-.app-header h2 {
-    font-size: 16px;
-    margin: 0;
 }
 
 @keyframes shimmer {
@@ -118,13 +111,12 @@ body::after {
     to   { background-position: 300% 50%; }
 }
 
-/* ---------- Форма: пары полей в строку ---------- */
 
-.calc-form .row {
+
+.fields-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 12px 16px;
 }
 
 .field label {
@@ -156,13 +148,13 @@ body::after {
     box-shadow: 0 0 0 3px rgba(77, 208, 255, 0.25);
 }
 
-/* ---------- Кнопки ---------- */
+
 
 .btn-primary {
     display: block;
     width: 100%;
     padding: 15px;
-    margin-top: 10px;
+    margin-top: 20px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -206,7 +198,7 @@ body::after {
     box-shadow: 0 10px 24px rgba(255, 65, 108, 0.55);
 }
 
-/* ---------- Блок обратной связи (результат / ошибка) ---------- */
+
 
 .feedback {
     margin-top: 18px;
@@ -229,7 +221,6 @@ body::after {
     text-shadow: 0 0 10px rgba(255, 80, 120, 0.5);
 }
 
-/* ---------- Журнал ---------- */
 
 .log-section {
     margin-top: 22px;
@@ -247,13 +238,17 @@ body::after {
     margin-bottom: 12px;
 }
 
+.log-head h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
 .log-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    max-height: 300px;
+    max-height: 280px;
     overflow-y: auto;
-    counter-reset: entry;
 }
 
 .log-list li {
@@ -278,12 +273,11 @@ body::after {
     border: none;
 }
 
-/* ---------- Страница 404 ---------- */
-
 .error-page {
     text-align: center;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    margin: 24px auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .code-404 {
@@ -302,23 +296,39 @@ body::after {
     margin-top: 20px;
 }
 
-/* ---------- Адаптив для телефона ---------- */
 
-@media screen and (max-width: 480px) {
-    .app-card {
-        margin: 15px 10px;
-        padding: 22px 16px;
+@media screen and (max-width: 640px) {
+    body {
+        align-items: flex-start;
     }
 
-    .calc-form .row {
-        grid-template-columns: 1fr;
+    .app-card {
+        margin: 16px;
+        padding: 24px 18px;
     }
 
     .app-header h1 {
-        font-size: 22px;
+        font-size: 23px;
     }
 
     .code-404 {
         font-size: 60px;
+    }
+}
+
+
+
+@media screen and (max-width: 420px) {
+    .fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .log-head {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .log-head .btn-clear {
+        width: 100%;
     }
 }
